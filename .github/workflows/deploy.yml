@@ -1,9 +1,10 @@
 
-name: Deploy React to GitHub Pages
+name: Deploy Dulce Legado
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
   workflow_dispatch:
 
@@ -21,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Descargar proyecto
+      - name: Obtener codigo
         uses: actions/checkout@v4
 
       - name: Configurar Node
@@ -36,7 +37,7 @@ jobs:
       - name: Construir proyecto
         run: npm run build
 
-      - name: Configurar GitHub Pages
+      - name: Configurar Pages
         uses: actions/configure-pages@v5
 
       - name: Subir archivos
@@ -45,15 +46,14 @@ jobs:
           path: ./dist
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
-
-    needs: build
-
     steps:
-      - name: Publicar página
+      - name: Publicar pagina
         id: deployment
         uses: actions/deploy-pages@v4
